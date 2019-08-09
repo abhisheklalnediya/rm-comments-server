@@ -17,20 +17,22 @@ import {
   del,
   requestBody,
 } from '@loopback/rest';
-import {Comment} from '../models';
-import {CommentRepository} from '../repositories';
-
+import { Comment } from '../models';
+import { CommentRepository } from '../repositories';
+import {
+  authenticate,
+} from '@loopback/authentication';
 export class CommentController {
   constructor(
     @repository(CommentRepository)
-    public commentRepository : CommentRepository,
-  ) {}
+    public commentRepository: CommentRepository,
+  ) { }
 
   @post('/comments', {
     responses: {
       '200': {
         description: 'Comment model instance',
-        content: {'application/json': {schema: getModelSchemaRef(Comment)}},
+        content: { 'application/json': { schema: getModelSchemaRef(Comment) } },
       },
     },
   })
@@ -38,7 +40,7 @@ export class CommentController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Comment, {exclude: ['id']}),
+          schema: getModelSchemaRef(Comment, { exclude: ['id'] }),
         },
       },
     })
@@ -51,7 +53,7 @@ export class CommentController {
     responses: {
       '200': {
         description: 'Comment model count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
@@ -67,12 +69,13 @@ export class CommentController {
         description: 'Array of Comment model instances',
         content: {
           'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(Comment)},
+            schema: { type: 'array', items: getModelSchemaRef(Comment) },
           },
         },
       },
     },
   })
+  @authenticate('jwt')
   async find(
     @param.query.object('filter', getFilterSchemaFor(Comment)) filter?: Filter<Comment>,
   ): Promise<Comment[]> {
@@ -83,7 +86,7 @@ export class CommentController {
     responses: {
       '200': {
         description: 'Comment PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
@@ -91,7 +94,7 @@ export class CommentController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Comment, {partial: true}),
+          schema: getModelSchemaRef(Comment, { partial: true }),
         },
       },
     })
@@ -105,11 +108,11 @@ export class CommentController {
     responses: {
       '200': {
         description: 'Comment model instance',
-        content: {'application/json': {schema: getModelSchemaRef(Comment)}},
+        content: { 'application/json': { schema: getModelSchemaRef(Comment) } },
       },
     },
   })
-  async findById(@param.path.number('id') id: number): Promise<Comment> {
+  async findById(@param.path.string('id') id: string): Promise<Comment> {
     return this.commentRepository.findById(id);
   }
 
@@ -121,11 +124,11 @@ export class CommentController {
     },
   })
   async updateById(
-    @param.path.number('id') id: number,
+    @param.path.number('id') id: string,
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Comment, {partial: true}),
+          schema: getModelSchemaRef(Comment, { partial: true }),
         },
       },
     })
@@ -142,7 +145,7 @@ export class CommentController {
     },
   })
   async replaceById(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @requestBody() comment: Comment,
   ): Promise<void> {
     await this.commentRepository.replaceById(id, comment);
@@ -155,7 +158,7 @@ export class CommentController {
       },
     },
   })
-  async deleteById(@param.path.number('id') id: number): Promise<void> {
+  async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.commentRepository.deleteById(id);
   }
 }

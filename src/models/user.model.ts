@@ -15,11 +15,12 @@ import { Entity, model, property } from '@loopback/repository';
   },
 })
 export class User extends Entity {
+
   @property({
     type: 'string',
     required: true,
   })
-  username: string;
+  email: string;
 
   @property({
     type: 'string',

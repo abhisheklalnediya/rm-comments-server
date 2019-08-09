@@ -3,12 +3,12 @@ import { Entity, model, property } from '@loopback/repository';
 @model({ settings: {} })
 export class Comment extends Entity {
   @property({
-    type: 'number',
+    type: 'string',
     id: true,
     required: false,
     generated: true
   })
-  id: number;
+  id: string;
 
   @property({
     type: 'string',
