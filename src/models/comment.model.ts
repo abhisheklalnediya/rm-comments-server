@@ -5,10 +5,8 @@ export class Comment extends Entity {
   @property({
     type: 'string',
     id: true,
-    required: false,
-    generated: true
   })
-  id: string;
+  id?: string;
 
   @property({
     type: 'string',
@@ -17,10 +15,27 @@ export class Comment extends Entity {
   comment: string;
 
   @property({
-    type: 'number',
-    required: true,
+    type: 'string',
+    default: null,
   })
-  user: number;
+  parent: string;
+
+  @property({
+    type: 'boolean',
+    default: false,
+  })
+  deleted: boolean;
+
+  @property({
+    type: 'boolean',
+    default: false,
+  })
+  edited: boolean;
+
+  @property({
+    type: 'string',
+  })
+  owner: string;
 
   @property({
     type: 'date',

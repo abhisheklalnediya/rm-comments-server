@@ -67,8 +67,10 @@ export class UserController {
       return savedUser;
     } catch (error) {
       // MongoError 11000 duplicate key
-      if (error.code === 11000 && error.errmsg.includes('index: uniqueEmail')) {
-        throw new HttpErrors.Conflict('Email value is already taken');
+      if (error.code === 11000 && error.errmsg.includes('index: email')) {
+        throw new HttpErrors.Conflict('Email is already taken');
+      } else if (error.code === 11000 && error.errmsg.includes('index: username')) {
+        throw new HttpErrors.Conflict('Username is already taken');
       } else {
         throw error;
       }

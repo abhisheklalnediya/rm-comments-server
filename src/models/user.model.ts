@@ -19,6 +19,7 @@ export class User extends Entity {
   @property({
     type: 'string',
     required: true,
+    index: { unique: true }
   })
   email: string;
 
@@ -36,13 +37,10 @@ export class User extends Entity {
 
   @property({
     type: 'string',
+    required: true,
+    index: { unique: true }
   })
-  firstName?: string;
-
-  @property({
-    type: 'string',
-  })
-  lastName?: string;
+  name: string;
 
   constructor(data?: Partial<User>) {
     super(data);

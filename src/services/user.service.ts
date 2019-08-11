@@ -42,12 +42,7 @@ export class UserService implements loopbackUserService<User, Credentials> {
 
   convertToUserProfile(user: User): UserProfile {
     // since first name and lastName are optional, no error is thrown if not provided
-    let name = '';
-    if (user.firstName) name = `${user.firstName}`;
-    if (user.lastName)
-      name = user.firstName
-        ? `${name} ${user.lastName}`
-        : `${user.lastName}`;
-    return { id: user.id, name, email: user.email };
+    const { id, name, email } = user
+    return { id, name, email };
   }
 }

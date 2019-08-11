@@ -20,8 +20,9 @@ import {
 import { Comment } from '../models';
 import { CommentRepository } from '../repositories';
 import {
-  authenticate,
+  authenticate, AuthenticationBindings, UserProfile,
 } from '@loopback/authentication';
+import { inject } from '@loopback/core';
 export class CommentController {
   constructor(
     @repository(CommentRepository)
@@ -36,6 +37,7 @@ export class CommentController {
       },
     },
   })
+  @authenticate('jwt')
   async create(
     @requestBody({
       content: {
@@ -45,8 +47,10 @@ export class CommentController {
       },
     })
     comment: Omit<Comment, 'id'>,
+    @inject(AuthenticationBindings.CURRENT_USER) currentUser: UserProfile,
   ): Promise<Comment> {
-    return this.commentRepository.create(comment);
+    const data: Comment = { ...comment, owner: currentUser.name || "unknown" }
+    return this.commentRepository.create(data);
   }
 
   @get('/comments/count', {
@@ -75,33 +79,11 @@ export class CommentController {
       },
     },
   })
-  @authenticate('jwt')
   async find(
-    @param.query.object('filter', getFilterSchemaFor(Comment)) filter?: Filter<Comment>,
+    @param.query.object('filter', getFilterSchemaFor(Comment)) filterParam?: Filter<Comment>,
   ): Promise<Comment[]> {
+    const filter = filterParam || { where: { deleted: false, edited: false } }
     return this.commentRepository.find(filter);
-  }
-
-  @patch('/comments', {
-    responses: {
-      '200': {
-        description: 'Comment PATCH success count',
-        content: { 'application/json': { schema: CountSchema } },
-      },
-    },
-  })
-  async updateAll(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(Comment, { partial: true }),
-        },
-      },
-    })
-    comment: Comment,
-    @param.query.object('where', getWhereSchemaFor(Comment)) where?: Where<Comment>,
-  ): Promise<Count> {
-    return this.commentRepository.updateAll(comment, where);
   }
 
   @get('/comments/{id}', {
@@ -124,7 +106,7 @@ export class CommentController {
     },
   })
   async updateById(
-    @param.path.number('id') id: string,
+    @param.path.string('id') id: string,
     @requestBody({
       content: {
         'application/json': {
@@ -159,6 +141,7 @@ export class CommentController {
     },
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
-    await this.commentRepository.deleteById(id);
+    await this.commentRepository.updateById(id, { deleted: true });
+    // await this.commentRepository.deleteById(id);
   }
 }
