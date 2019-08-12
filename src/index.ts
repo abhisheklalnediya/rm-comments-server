@@ -8,9 +8,8 @@ export async function main(options: ApplicationConfig = {}) {
   await app.boot();
   await app.start();
 
-  const url = app.restServer.url;
-  console.log(`Server is running at ${url}`);
-  console.log(`Try ${url}/ping`);
+  console.log(`Api Server is running at http://127.0.0.1:3000`);
+  console.log(`Client is running at http://127.0.0.1:3001`);
 
   return app;
 }
