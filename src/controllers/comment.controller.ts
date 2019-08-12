@@ -105,6 +105,7 @@ export class CommentController {
       },
     },
   })
+  @authenticate('jwt')
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -126,6 +127,7 @@ export class CommentController {
       },
     },
   })
+  @authenticate('jwt')
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody() comment: Comment,
@@ -140,6 +142,7 @@ export class CommentController {
       },
     },
   })
+  @authenticate('jwt')
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.commentRepository.updateById(id, { deleted: true });
     // await this.commentRepository.deleteById(id);

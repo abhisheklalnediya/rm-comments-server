@@ -1,7 +1,7 @@
-import {RmCommentsServerApplication} from './application';
-import {ApplicationConfig} from '@loopback/core';
+import { RmCommentsServerApplication } from './application';
+import { ApplicationConfig } from '@loopback/core';
 
-export {RmCommentsServerApplication};
+export { RmCommentsServerApplication };
 
 export async function main(options: ApplicationConfig = {}) {
   const app = new RmCommentsServerApplication(options);

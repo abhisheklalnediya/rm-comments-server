@@ -43,7 +43,7 @@ export class RmCommentsServerApplication extends BootMixin(
 
     // Customize @loopback/rest-explorer configuration here
     this.bind(RestExplorerBindings.CONFIG).to({
-      path: '/explorer',
+      path: '/api/explorer',
     });
     this.component(RestExplorerComponent);
 
